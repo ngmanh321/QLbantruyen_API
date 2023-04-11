@@ -1,0 +1,202 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="Scripts/jquery.js"></script>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            GetAllCustomers();
+            getname();
+        });
+        //Hàm lấy ra toàn bộ danh sách Khách Hàng. Dùng $.ajax() thực hiện method HTTP GET
+        function GetAllCustomers() {
+            $.ajax({
+                url: 'https://localhost:44312/api/customers2/',
+                method: 'GET',
+                contentType: 'json',
+                dataType: 'json',
+                error: function (response) {
+                }, success: function (reponse) {
+                    const len = reponse.length;
+                    console.log(reponse);
+                    let table = '';
+                    for (var i = 0; i < len; ++i) {
+                        table = table + '<tr>';
+
+                        table = table + '<td>' + reponse[i].Ten + '</td>';
+                        table = table + '<td>' + reponse[i].MatKhau + '</td>';
+                        table = table + '<td>' + reponse[i].LoaiTK + '</td>';
+
+
+
+                        table = table + '</tr>';
+                    }
+                    document.getElementById('allKH').innerHTML = table;
+                },
+                fail: function (response) {
+                }
+            });
+        }
+        //Hàm lấy Thêm mới Khách hàng. Dùng $.ajax() thực hiện method HTTPPOST
+        function insertKhachHang() {
+            var url = 'https://localhost:44312/api/customers2?id=' +
+                $('input').eq(0).val() + '&mk=' + $('input').eq(1).val()
+                + '&loai=' + $('input').eq(2).val();
+            $.ajax({
+                url: url,
+                method: 'POST',
+                contentType: 'json',
+                dataType: 'json',
+                error: function (reponse) {
+                    alert("Thêm mới không thành công");
+                },
+                success: function (response) {
+                    // alert("Thêm mới thành công");
+                    GetAllCustomers(); //Gọi đến hàm lấy dữ liệu lên bảng
+                }
+            });
+        }
+
+        function updateKhachHang() {
+            var url = 'https://localhost:44312/api/customers2?id=' +
+                $('input').eq(0).val() + '&mk=' + $('input').eq(1).val()
+                + '&loai=' + $('input').eq(2).val();
+
+            $.ajax({
+                url: url,
+                method: 'PUT',
+                contentType: 'json',
+                dataType: 'json',
+                error: function (response) {
+                    alert("Sua không thành công");
+                },
+                success: function (reponse) {
+                    alert("Sua thành công");
+                    GetAllCustomers(); //Gọi đến hàm lấy dữ liệu lên bảng
+                }
+            });
+        }
+
+        function deleteKhachHang() {
+            var url = 'https://localhost:44312/api/customers2?id=' +
+                $('#txtMK').eq(0).val();
+            $.ajax({
+                url: url,
+                method: 'DELETE',
+                contentType: 'json',
+                dataType: 'json',
+                error: function (response) {
+                    alert("Xoa không thành công");
+                },
+                success: function (reponse) {
+                    alert("Xoa thành công");
+                    GetAllCustomers(); //Gọi đến hàm lấy dữ liệu lên bảng
+                }
+            });
+        }
+    </script>
+
+
+
+</head>
+
+<body>
+
+
+
+    <div class="container">
+        <table style="border:none">
+            <tbody>
+                <tr>
+                    <td style="width:150px">Ten TK: </td>
+                    <td>
+                        <input id="txtMK" type="text" name=""
+                               placeholder="TK" />
+                    </td>
+                </tr>
+                <tr>
+                    <td style="width:30px">Mat Khau: </td>
+                    <td>
+                        <input type="text" name="" placeholder="MK" />
+                    </td>
+                </tr>
+
+                <tr>
+                    <td style="width:30px">Loai Tai Khoan: </td>
+                    <td>
+                        <input type="text" name="" placeholder="LoaiTK" />
+                    </td>
+                </tr>
+
+
+                <tr>
+                    <td>
+                        <button class="btn-primary update-button"
+                                onclick="insertKhachHang();">
+                            Thêm mới
+                        </button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>
+                        <button class="btn-primary update-button"
+                                onclick="updateKhachHang();">
+                            Sua
+                        </button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <button class="btn-primary update-button"
+                                onclick="deleteKhachHang();">
+                            Xoa
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+
+
+
+        <div class="container">
+            <table id="tblKhachhang" class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th>Ten TK</th>
+                        <th>Mat Khau</th>
+                        <th>Loai TK</th>
+
+
+
+                    </tr>
+                </thead>
+                <tbody id="allKH">
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+</body>
+
+</html>

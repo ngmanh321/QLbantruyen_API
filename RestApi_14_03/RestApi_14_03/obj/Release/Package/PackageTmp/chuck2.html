@@ -1,0 +1,386 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+            integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+            crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.0.0/dist/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <script src="Scripts/jquery.js"></script>
+
+    <title>Chuck Norris Jokes Api - JSON for random Chuck Norris jokes</title>
+
+    <style>
+
+
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: sans-serif;
+
+        }
+
+        header {
+
+            width: 100%;
+            background-color: #222;
+            color: white;
+            padding: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+            header h1 {
+                margin: 0;
+                font-size: 36px;
+            }
+
+        .search-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            width: 100%;
+            height: 50px;
+            background-color: #f2f2f2;
+            padding: 10px;
+        }
+
+        header input[type="text"] {
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            margin-right: 10px;
+        }
+
+        header button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            cursor: pointer;
+        }
+
+        main {
+            margin: 20px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            text-align: center;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        @media screen and (max-width: 767px) {
+            header {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+                header form {
+                    margin-top: 10px;
+                }
+
+                header input[type="text"] {
+                    width: 100%;
+                }
+        }
+    </style>
+
+    <script type="text/javascript">
+
+
+        $(document).ready(function () {
+            for (let i = 0; i < 20; i++) {
+                GetAllCustomers();
+            }
+
+
+        });
+
+
+        function GetAllCustomers() {
+            $.ajax({
+
+                url: 'https://api.chucknorris.io/jokes/random',
+                method: 'GET',
+                error: function (reponse) {
+                    alert("Khong co du lieu phu hop" + keyword);
+                }, success: function (response) {
+                    // Lấy dữ liệu từ API trả về
+                    var id = response.id;
+                    var categories = response.categories.join(", ");
+                    var created_at = response.created_at;
+                    var url = response.url;
+                    var value = response.value.slice(0, 90) + ".....";
+
+                    // Tạo hàng mới trong bảng
+                    var row = "<tr>" +
+                        "<td>" + id + "</td>" +
+                        "<td>" + categories + "</td>" +
+                        "<td>" + created_at + "</td>" +
+                        "<td><a href='" + url + "'>" + url + "</a></td>" +
+                        "<td>" + value + "</td>" +
+                        "<td onclick=" + "get_rows(); ><a href='" + " chuck3.html " + "'>" + "Mua" + "</a></td>" +
+
+                        "</tr>";
+
+                    // Thêm hàng vào bảng
+                    $("#table-body").append(row);
+
+
+                },
+                fail: function (reponse) {
+                }
+            });
+
+        }
+
+
+        function search_value() {
+
+            // Lấy từ khóa tìm kiếm
+            var keyword = $("#search-input").val();
+
+            // Gọi API để lấy dữ liệu mới
+            $.ajax({
+                url: "https://api.chucknorris.io/jokes/search",
+                data: {
+                    query: keyword
+                }, error: function (response) {
+                    alert("Khong co du lieu phu hop" + keyword);
+
+                },
+                success: function (data) {
+                    // Xóa các hàng cũ trong bảng
+                    $("#table-body").empty();
+
+                    // Thêm các hàng mới với dữ liệu mới
+                    for (var i = 0; i < data.result.length; i++) {
+                        var id = data.result[i].id;
+                        var categories = data.result[i].categories.join(", ");
+                        var created_at = data.result[i].created_at;
+                        var url = data.result[i].url;
+                        var value = data.result[i].value.slice(0, 90) + ".....";
+
+                        $("#table-body").append(
+                            "<tr>" +
+                            "<td>" + id + "</td>" +
+                            "<td>" + categories + "</td>" +
+                            "<td>" + created_at + "</td>" +
+                            "<td><a href='" + url + "'>" + url + "</a></td>" +
+                            "<td>" + value + "</td>" +
+                            "<td onclick=" + "get_rows(); ><a href='" + " chuck3.html " + "'>" + "Mua" + "</a></td>" +
+                            "</tr>"
+                        );
+                    }
+
+                    // Kích hoạt lại tính năng tìm kiếm trên bảng
+                    $("#search-input").empty();
+                }
+            });
+        }
+
+
+        function search_loai() {
+            var url = 'https://api.chucknorris.io/jokes/random?category=' +
+                $("#search-input").val();
+            var keyword = $("#search-input").val();
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+
+                error: function (response) {
+                    alert("Khong co du lieu phu hop" + keyword);
+
+                },
+                success: function (data) {
+
+                    // Thêm các hàng mới với dữ liệu mới
+
+                    var id = data.id;
+                    var categories = data.categories.join(", ");
+                    var created_at = data.created_at;
+                    var url = data.url;
+                    var value = data.value.slice(0, 90) + ".....";
+
+                    // Tạo hàng mới trong bảng
+                    var row = "<tr>" +
+                        "<td>" + id + "</td>" +
+                        "<td>" + categories + "</td>" +
+                        "<td>" + created_at + "</td>" +
+                        "<td><a href='" + url + "'>" + url + "</a></td>" +
+                        "<td>" + value + "</td>" +
+                        "<td onclick=" + "get_rows(); ><a href='" + " chuck3.html " + "'>" + "Mua" + "</a></td>" +
+                        "</tr>";
+
+                    // Thêm hàng vào bảng
+                    $("#table-body").append(row);
+
+
+                    // Kích hoạt lại tính năng tìm kiếm trên bảng
+                    $("#search-input").empty();
+
+                }
+            });
+        }
+
+
+        function get_loai() {
+
+            // Xóa các hàng cũ trong bảng
+            $("#table-body").empty();
+
+            for (let i = 0; i < 10; i++) {
+                search_loai();
+            }
+        }
+
+
+        function search_id() {
+            var url = 'https://api.chucknorris.io/jokes/' +
+                $("#search-input").val();
+            var keyword = $("#search-input").val();
+
+            $.ajax({
+                url: url,
+                method: 'GET',
+
+                error: function (response) {
+                    alert("Khong co du lieu phu hop" + keyword);
+                },
+                success: function (data) {
+                    // Xóa các hàng cũ trong bảng
+                    $("#table-body").empty();
+
+                    // Thêm các hàng mới với dữ liệu mới
+
+                    var id = data.id;
+                    var categories = data.categories.join(", ");
+                    var created_at = data.created_at;
+                    var url = data.url;
+                    var value = data.value.slice(0, 90) + ".....";
+
+                    // Tạo hàng mới trong bảng
+                    var row = "<tr>" +
+                        "<td>" + id + "</td>" +
+                        "<td>" + categories + "</td>" +
+                        "<td>" + created_at + "</td>" +
+                        "<td><a href='" + url + "'>" + url + "</a></td>" +
+                        "<td>" + value + "</td>" +
+                        "<td onclick=" + "get_rows(); ><a href='" + " chuck3.html " + "'>" + "Mua" + "</a></td>" +
+                        "</tr>";
+
+                    // Thêm hàng vào bảng
+                    $("#table-body").append(row);
+
+
+                    // Kích hoạt lại tính năng tìm kiếm trên bảng
+                    $("#search-input").empty();
+
+                }
+            });
+        }
+
+
+        function get_rows() {
+            var id;;
+            const rows = document.querySelectorAll("#table-body tr");
+
+            // Duyệt qua từng hàng và gắn hàm xử lý sự kiện onclick cho từng hàng
+            rows.forEach((row) => {
+                row.onclick = () => {
+                    // Lấy ra các cột trong hàng
+                    const cells = row.getElementsByTagName("td");
+
+                    // Lấy ra dữ liệu từ mỗi cột và hiển thị lên console
+                    id = cells[0].innerText;
+                    created = cells[2].innerText;
+
+                    alert(id);
+                    localStorage.setItem("iddd", "" + id);
+                    localStorage.setItem("iddd1", "" + created);
+
+
+                };
+
+               
+            });
+            re
+
+
+
+        }
+
+
+    </script>
+
+
+</head>
+
+<body>
+
+
+    <header>
+
+        <h1>Chuck Norris Jokes Api - JSON </h1>
+        <a href=""><img alt="Chuck Norris Jokes Api - JSON API for random Chuck Norris jokes" src="chucknorris.png" height="60" width="200"></a>
+        <input id="search-input" placeholder="Nhập từ khóa...">
+        <button class="btn-primary update-button" onclick="search_value();">Theo Value</button>
+        <button class="btn-primary update-button" onclick="get_loai();">Theo Loai</button>
+        <button class="btn-primary update-button" onclick="search_id();">Theo Id</button>
+        <a href="chuck3.html"> <button class=" update-button">Shopping</button></a>
+
+
+    </header>
+    <table>
+
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>The Loai</th>
+                <th>Ngay Cap Nhat</th>
+                <th>Doc Truyen</th>
+                <th>Tom Tat</th>
+                <th></th>
+            </tr>
+        </thead>
+
+        <tbody id="table-body">
+        </tbody>
+    </table>
+
+
+    <footer>
+        <br />6
+    </footer>
+</body>
+</html>

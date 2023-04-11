@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<parameters>
+  <parameter name="QLKHACH_APIConnectionString-Web.config Connection String" description="QLKHACH_APIConnectionString Connection String used in web.config by the application to access the database." defaultValue="Data Source=THUNGUYEN\SQLEXPRESS;Initial Catalog=QLKHACH_API;Integrated Security=True" tags="SqlConnectionString">
+    <parameterEntry kind="XmlFile" scope="C:\\Users\\thang\\Desktop\\LT\ API\\code\\RestApi_14_03\\RestApi_14_03\\obj\\Release\\Package\\PackageTmp\\Web\.config$" match="/configuration/connectionStrings/add[@name='QLKHACH_APIConnectionString']/@connectionString" />
+  </parameter>
+</parameters>
